@@ -14,7 +14,7 @@
 
     <!-- JavaScript Interface -->
     <js-module src="www/braintree-plugin.js" name="BraintreePlugin">
-        <clobbers target="BraintreePlugin" />
+        <clobbers target="BraintreePlugin"/>
     </js-module>
 
     <!-- Android Configuration -->
@@ -22,23 +22,24 @@
 
         <config-file target="res/xml/config.xml" parent="/*">
             <feature name="BraintreePlugin">
-                <param name="android-package" value="net.justincredible.BraintreePlugin" />
+                <param name="android-package" value="net.justincredible.BraintreePlugin"/>
             </feature>
         </config-file>
 
-        <source-file src="src/android/BraintreePlugin.java" target-dir="src/net/justincredible" />
+        <source-file src="src/android/BraintreePlugin.java" target-dir="src/net/justincredible"/>
 
-        <framework src="src/android/build-extras.gradle" custom="true" type="gradleReference" />
+        <framework src="src/android/build-extras.gradle" custom="true" type="gradleReference"/>
 
         <config-file target="AndroidManifest.xml" parent="application">
-			<activity android:name="com.braintreepayments.api.BraintreeBrowserSwitchActivity" android:launchMode="singleTask">
-				<intent-filter>
-					<action android:name="android.intent.action.VIEW" />
-					<category android:name="android.intent.category.DEFAULT" />
-					<category android:name="android.intent.category.BROWSABLE" />
-					<data android:scheme="${applicationId}.braintree" />
-				</intent-filter>
-			</activity>
+            <activity android:name="com.braintreepayments.api.BraintreeBrowserSwitchActivity"
+                      android:launchMode="singleTask">
+                <intent-filter>
+                    <action android:name="android.intent.action.VIEW"/>
+                    <category android:name="android.intent.category.DEFAULT"/>
+                    <category android:name="android.intent.category.BROWSABLE"/>
+                    <data android:scheme="${applicationId}.braintree"/>
+                </intent-filter>
+            </activity>
         </config-file>
 
     </platform>
@@ -46,42 +47,51 @@
     <!-- iOS Configuration -->
     <platform name="ios">
 
-	<!-- Hook to embed iOS frameworks after ios platform added -->
-	    <hook type="after_platform_add" src="scripts/add_embedded_ios_frameworks.js" />
-	<!-- Hook to embed iOS frameworks after installation -->
-	    <hook type="after_plugin_install" src="scripts/add_embedded_ios_frameworks.js" />
-
+        <hook type="after_platform_add" src="scripts/ios_add_url_scheme.js"/>
+        <hook type="after_plugin_install" src="scripts/ios_add_url_scheme.js"/>
 
         <config-file target="config.xml" parent="/*">
             <feature name="BraintreePlugin">
-                <param name="ios-package" value="BraintreePlugin" />
+                <param name="ios-package" value="BraintreePlugin"/>
             </feature>
         </config-file>
 
         <config-file target="*-Info.plist" parent="LSApplicationQueriesSchemes">
-          <array>
-            <string>com.paypal.ppclient.touch.v1</string>
-            <string>com.paypal.ppclient.touch.v2</string>
-            <string>com.venmo.touch.v2</string>
-          </array>
+            <array>
+                <string>com.paypal.ppclient.touch.v1</string>
+                <string>com.paypal.ppclient.touch.v2</string>
+                <string>com.venmo.touch.v2</string>
+            </array>
         </config-file>
 
-        <header-file src="src/ios/BraintreePlugin.h" />
-        <source-file src="src/ios/BraintreePlugin.m" />
+        <config-file target="*-Debug.plist" parent="com.apple.developer.in-app-payments">
+            <array>
+                <string>merchant.com.xorbia.merchant.sandbox</string>
+            </array>
+        </config-file>
 
-        <framework src="lib/ios/PayPalUtils.framework" custom="true" embed="true" weak="false" />
-        <framework src="lib/ios/PayPalDataCollector.framework" custom="true" embed="true" weak="false" />
-        <framework src="lib/ios/PayPalOneTouch.framework" custom="true" embed="true" weak="false" />
-        <framework src="lib/ios/BraintreeVenmo.framework" custom="true" embed="true" weak="false" />
-        <framework src="lib/ios/BraintreeUnionPay.framework" custom="true" embed="true" weak="false" />
-        <framework src="lib/ios/BraintreeUIKit.framework" custom="true" embed="true" weak="false" />
-        <framework src="lib/ios/BraintreeDropIn.framework" custom="true" embed="true" weak="false" />
-        <framework src="lib/ios/BraintreePayPal.framework" custom="true" embed="true" weak="false" />
-        <framework src="lib/ios/BraintreeDataCollector.framework" custom="true" embed="true" weak="false" />
-        <framework src="lib/ios/BraintreeCore.framework" custom="true" embed="true" weak="false" />
-        <framework src="lib/ios/BraintreeCard.framework" custom="true" embed="true" weak="false" />
-        <framework src="lib/ios/BraintreeApplePay.framework" custom="true" embed="true" weak="false" />
-        <framework src="lib/ios/Braintree3DSecure.framework" custom="true" embed="true" weak="false" />
+        <config-file target="*-Release.plist" parent="com.apple.developer.in-app-payments">
+            <array>
+                <string>merchant.com.xorbia.merchant</string>
+            </array>
+        </config-file>
+
+        <header-file src="src/ios/BraintreePlugin.h"/>
+        <source-file src="src/ios/BraintreePlugin.m"/>
+
+        <framework src="lib/ios/PayPalUtils.framework" custom="true" embed="true" weak="false"/>
+        <framework src="lib/ios/PayPalDataCollector.framework" custom="true" embed="true" weak="false"/>
+        <framework src="lib/ios/PayPalOneTouch.framework" custom="true" embed="true" weak="false"/>
+        <framework src="lib/ios/BraintreeVenmo.framework" custom="true" embed="true" weak="false"/>
+        <framework src="lib/ios/BraintreeUnionPay.framework" custom="true" embed="true" weak="false"/>
+        <framework src="lib/ios/BraintreeUIKit.framework" custom="true" embed="true" weak="false"/>
+        <framework src="lib/ios/BraintreeDropIn.framework" custom="true" embed="true" weak="false"/>
+        <framework src="lib/ios/BraintreePayPal.framework" custom="true" embed="true" weak="false"/>
+        <framework src="lib/ios/BraintreeDataCollector.framework" custom="true" embed="true" weak="false"/>
+        <framework src="lib/ios/BraintreeCore.framework" custom="true" embed="true" weak="false"/>
+        <framework src="lib/ios/BraintreeCard.framework" custom="true" embed="true" weak="false"/>
+        <framework src="lib/ios/BraintreeApplePay.framework" custom="true" embed="true" weak="false"/>
+        <framework src="lib/ios/Braintree3DSecure.framework" custom="true" embed="true" weak="false"/>
 
     </platform>
 

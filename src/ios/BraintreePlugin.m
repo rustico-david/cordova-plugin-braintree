@@ -111,15 +111,12 @@ NSString *countryCode;
 		applePayMerchantID = [command.arguments objectAtIndex:0];
 		currencyCode = [command.arguments objectAtIndex:1];
 		countryCode = [command.arguments objectAtIndex:2];
-	
 		applePayInited = YES;
-
-	    CDVPluginResult *res = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
-	    [self.commandDelegate sendPluginResult:res callbackId:command.callbackId];
     } else {
-	    CDVPluginResult *res = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:@"ApplePay cannot be used."];
-	    [self.commandDelegate sendPluginResult:res callbackId:command.callbackId];
+		applePayInited = NO;
     }
+    CDVPluginResult *res = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
+    [self.commandDelegate sendPluginResult:res callbackId:command.callbackId];
 }
 
 - (void)presentDropInPaymentUI:(CDVInvokedUrlCommand *)command {
@@ -163,15 +160,16 @@ NSString *countryCode;
     BTDropInController *dropIn = [[BTDropInController alloc] initWithAuthorization:self.token request:paymentRequest handler:^(BTDropInController * _Nonnull controller, BTDropInResult * _Nullable result, NSError * _Nullable error) {
         [self.viewController dismissViewControllerAnimated:YES completion:nil];
         if (error != nil) {
-            NSLog(@"ERROR");
+            NSLog(@"ERROR: %@", [error localizedDescription]);
+            CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR
+                                                              messageAsString:[error localizedDescription]];
+            [self.commandDelegate sendPluginResult:pluginResult callbackId:dropInUIcallbackId];
+            dropInUIcallbackId = nil;
         } else if (result.cancelled) {
             if (dropInUIcallbackId) {
-                
                 NSDictionary *dictionary = @{ @"userCancelled": @YES };
-                
                 CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK
                                                               messageAsDictionary:dictionary];
-                
                 [self.commandDelegate sendPluginResult:pluginResult callbackId:dropInUIcallbackId];
                 dropInUIcallbackId = nil;
             }
@@ -179,9 +177,7 @@ NSString *countryCode;
             if (dropInUIcallbackId) {
                 if (result.paymentOptionType == BTUIKPaymentOptionTypeApplePay ) {
                     PKPaymentRequest *apPaymentRequest = [[PKPaymentRequest alloc] init];
-                    apPaymentRequest.paymentSummaryItems = @[
-                                                             [PKPaymentSummaryItem summaryItemWithLabel:primaryDescription amount:[NSDecimalNumber decimalNumberWithString: amount]]
-                                                             ];
+                    apPaymentRequest.paymentSummaryItems = @[[PKPaymentSummaryItem summaryItemWithLabel:primaryDescription amount:[NSDecimalNumber decimalNumberWithString: amount]]];
                     apPaymentRequest.supportedNetworks = @[PKPaymentNetworkVisa, PKPaymentNetworkMasterCard, PKPaymentNetworkAmex, PKPaymentNetworkDiscover];
                     apPaymentRequest.merchantCapabilities = PKMerchantCapability3DS;
                     apPaymentRequest.currencyCode = currencyCode;
