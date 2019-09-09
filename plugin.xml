@@ -66,13 +66,13 @@
 
         <config-file target="*-Debug.plist" parent="com.apple.developer.in-app-payments">
             <array>
-                <string>merchant.com.xorbia.merchant.sandbox</string>
+                <string>merchant.com.bigtickets.merchant.sandbox</string>
             </array>
         </config-file>
 
         <config-file target="*-Release.plist" parent="com.apple.developer.in-app-payments">
             <array>
-                <string>merchant.com.xorbia.merchant</string>
+                <string>merchant.com.bigtickets.merchant</string>
             </array>
         </config-file>
 
