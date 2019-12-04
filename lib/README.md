@@ -3,7 +3,7 @@
 
 The iOS frameworks were built from the [Braintree SDK repo](https://github.com/braintree/braintree_ios ) on GitHub using Carthage.
 
-The framework bundles in this directory were built from version 4.9.0.
+The framework bundles in this directory were built from braintree_ios 4.30.2 and braintree-ios-drop-in 7.5.0.
 
 To rebuild the frameworks for future versions, follow these steps:
 
